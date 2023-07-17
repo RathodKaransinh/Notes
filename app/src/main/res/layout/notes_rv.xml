@@ -44,7 +44,7 @@
             android:id="@+id/date_txt"
             android:text="@string/date"
             android:textStyle="italic"
-            android:textColor="@color/black"
+            android:textColor="#B3000000"
             android:textSize="12sp" />
 
     </LinearLayout>

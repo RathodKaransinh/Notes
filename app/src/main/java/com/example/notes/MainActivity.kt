@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notes.databinding.ActivityMainBinding
 import com.google.gson.Gson
 
-class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItemClickListener{
+class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var database: NotesDatabase
@@ -28,17 +28,17 @@ class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItem
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         database = NotesDatabase.getDatabase(this)
-        val dao=database.notesdao()
+        val dao = database.notesdao()
         val repository = NotesRepository(dao)
 
         binding.recyclerView.setHasFixedSize(true)
-        binding.recyclerView.layoutManager=StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        binding.recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         adapter = RVAdapter(this, this)
         binding.recyclerView.adapter = adapter
 
-        binding.addNoteBtn.setOnClickListener{
+        binding.addNoteBtn.setOnClickListener {
             startActivity(Intent(this, AddNote::class.java).putExtra("id", 100000))
-            finish()
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -47,14 +47,15 @@ class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItem
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null){
+                if (newText != null) {
                     adapter.filterList(newText)
                 }
                 return true
             }
         })
 
-        mainViewModel = ViewModelProvider(this, MainViewModelFactory(repository))[MainViewModel::class.java]
+        mainViewModel =
+            ViewModelProvider(this, MainViewModelFactory(repository))[MainViewModel::class.java]
 
         mainViewModel.getNotes().observe(this) {
             it?.let {
@@ -64,11 +65,10 @@ class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItem
     }
 
     override fun onItemClicked(notes: Notes) {
-        val intent=Intent(this@MainActivity, AddNote::class.java)
+        val intent = Intent(this@MainActivity, AddNote::class.java)
         val json = Gson().toJson(notes)
         intent.putExtra("note", json)
         startActivity(intent)
-        finish()
     }
 
     override fun onLongItemClicked(notes: Notes, cardView: CardView) {
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItem
         popUpDisplay(cardView)
     }
 
-    private fun popUpDisplay(cardView: CardView){
+    private fun popUpDisplay(cardView: CardView) {
         val popUp = PopupMenu(this, cardView)
         popUp.setOnMenuItemClickListener(this)
         popUp.inflate(R.menu.pop_up_menu)
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity(), NoteItemListener, PopupMenu.OnMenuItem
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onMenuItemClick(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.delete_note){
+        if (item?.itemId == R.id.delete_note) {
             mainViewModel.deleteNote(note)
             return true
         }
